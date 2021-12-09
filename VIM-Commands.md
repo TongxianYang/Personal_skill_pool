@@ -177,3 +177,19 @@ console.error("No more round to run") // 字符上面的横线表示该字符高
 | 基于字符的可视模式 | v        |
 | 基于行的可视模式   | V        |
 | 基于列的可视模式   | CTRL+v   |
+有一段文本，每一行都用 var 声明变量（比如 var gameMode），现在我希望改成使用 const 来声明。我们来看看具体的实现方式。
+![image](https://user-images.githubusercontent.com/95041165/145465114-7fb1f66d-98e4-498e-97e4-01f286ca1d66.png)
+第一步，把光标挪到第一行开头的 v 字符处，使用组合键 Ctrl-v 进入列可视模式，然后使用 7j 下移动七行，再用 e 向右移动一个单词，从而选中一个包含所有 var 的矩形区域。
+![image](https://user-images.githubusercontent.com/95041165/145465295-44c0f000-19a7-4519-b6f2-ba7ee27ae4e2.png)
+第二步是开始编辑。输入 c，删除所有的 var，并进入编辑模式。
+![image](https://user-images.githubusercontent.com/95041165/145465398-319a4897-0ac3-4dd2-aa73-47edb8264017.png)
+第三步是输入 const，并输入 Esc 完成编辑操作，回到命令模式，整个修改完成。
+![image](https://user-images.githubusercontent.com/95041165/145465474-8ff3ff16-44f9-433d-ab36-1647fdf246a1.png)
+  
+第二个例子。我希望在上面这段文字的每一行末尾都添加一个分号。具体的操作步骤如下所示：
+首先，用 $ 命令把光标挪到最后一行的末尾，然后 Ctrl-v 进入列模式，再用 7j 命令将光标挪到第一行，这时，每一行的末尾都被包含到了一个方块里。不过因为每一行的长度不同，所以方块没有显示完全。
+![image](https://user-images.githubusercontent.com/95041165/145465683-222b8d9d-0d36-448f-a14c-2075bf141485.png)
+然后，输入 A 命令，光标挪到每一行的末尾，并进入编辑模式。
+![image](https://user-images.githubusercontent.com/95041165/145465771-24329465-d910-4640-a1a9-3bb810291e0b.png)
+最后，输入要插入的分号，输入 Esc 完成编辑。这样，每一行的末尾都添加了一个分号。
+![image](https://user-images.githubusercontent.com/95041165/145465887-31cc372d-8b1b-4e28-a2e6-ebcaedfb5637.png)
