@@ -32,3 +32,9 @@ if has('mouse')
   "endif
 endif
 
+set ts=4
+set expandtab
+
+" 中文支持
+set fileencodings=ucs-bom,utf-8,gb18030,latin1
+
