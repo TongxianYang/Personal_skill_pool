@@ -57,3 +57,8 @@ if !has('patch-8.0.210')
   endfunction
 endif
 
+" 打开已被另个会话打开的文件时，图形界面会自动切换那个会话
+if v:version >= 800
+  packadd! editexisting
+endif
+
