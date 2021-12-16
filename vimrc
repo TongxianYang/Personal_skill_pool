@@ -62,3 +62,9 @@ if v:version >= 800
   packadd! editexisting
 endif
 
+" 多窗口切换键映射设置(正常模式和插入模式一样)
+nnoremap <C-Tab>   <C-W>w
+inoremap <C-Tab>   <C-O><C-W>w
+nnoremap <C-S-Tab> <C-W>W
+inoremap <C-S-Tab> <C-O><C-W>W
+
