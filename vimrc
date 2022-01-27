@@ -85,3 +85,10 @@ aug QFClose
   au!
   au WinEnter * if winnr('$') == 1 && &buftype == "quickfix"|q|endif
 aug END
+
+" 这个插件能在文件较大时自动关闭事件处理、撤销、语法加亮等功能，
+" 用来换取更快的处理速度和更短的响应时间. 下面超过100MB算大文件
+let g:LargeFile = 100
+
+" Auto-pairs插件配置
+let g:AutoPairsShortcutToggle = 'π'
