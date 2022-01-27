@@ -24,12 +24,12 @@ endif
 
 " 鼠标支持
 if has('mouse')
-  set mouse-=a
-  "if (&term =~ 'xterm' && !has('mac'))
-    "set mouse=a
-  "else
-    "set mouse=nvi
-  "endif
+  " set mouse-=a
+  if (&term =~ 'xterm' && !has('mac'))
+    set mouse=a
+  else
+    set mouse=nvi
+  endif
 endif
 
 set ts=4
@@ -68,3 +68,20 @@ inoremap <C-Tab>   <C-O><C-W>w
 nnoremap <C-S-Tab> <C-W>W
 inoremap <C-S-Tab> <C-O><C-W>W
 
+" Home键切换光标位置(行首与行中第1个非空白字符位置)
+function! GoToFirstNonBlankOrFirstColumn()
+  let cur_col = col('.')
+  normal! ^
+  if cur_col != 1 && cur_col == col('.')
+    normal! 0
+  endif
+  return ''
+endfunction
+nnoremap <silent> <Home> :call GoToFirstNonBlankOrFirstColumn()<CR>
+inoremap <silent> <Home> <C-R>=GoToFirstNonBlankOrFirstColumn()<CR>
+
+" 自动关闭最后一个quickfix窗口
+aug QFClose
+  au!
+  au WinEnter * if winnr('$') == 1 && &buftype == "quickfix"|q|endif
+aug END
