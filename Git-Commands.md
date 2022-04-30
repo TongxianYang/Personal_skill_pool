@@ -1,6 +1,7 @@
 
 # GIT
 
+
 常用操作速查
   
   
@@ -82,3 +83,8 @@ git stash apply (恢复不删除stash)
 git stash pop 	(恢复删除stash)
   
   
+## 升级最新版本
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt update
+sudo apt install git
+
