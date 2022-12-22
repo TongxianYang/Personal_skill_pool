@@ -7,17 +7,18 @@
 #include <unistd.h>
 
 
-#if 0
-
-int global = 0;
+#if 0  //使用变量来统计分配内存块数量
 
 #define ENABLE_MEMLEAK 1
 
-
-void *_malloc(size_t size, const char  *filename, int line) { // ++
-
 #if ENABLE_MEMLEAK
-	global++;  //atomic
+int global = 0;
+#endif
+
+void *_malloc(size_t size, const char *filename, int line)
+{
+#if ENABLE_MEMLEAK
+	global++;  //atomic 需要支持多线程
 #endif
 
 	void *p = malloc(size);
@@ -28,48 +29,37 @@ void *_malloc(size_t size, const char  *filename, int line) { // ++
 	FILE *fp = fopen(buff, "w");
 	fprintf(fp, "[+%s:%d]_malloc: %ld, ptr: %p\n", filename, line, size, p);
 	fflush(fp);
-
 	fclose(fp);
 
-	
 	return p;
 }
 
-void _free(void *p, const char  *filename, int line) { // --
-
+void _free(void *p, const char *filename, int line)
+{
 	//printf("[-%s:%d]_free: %p\n", filename, line, p);
 #if ENABLE_MEMLEAK
-	global--;
+	global--; //atomic 需要支持多线程
 #endif
 
-	
     char buff[128] = {0};
     sprintf(buff, "./memleak/%p.mem", p);
 
-	if (unlink(buff) < 0) { // 
+	if (unlink(buff) < 0) {
 		printf("double free: %p\n", p);
-		return ;
+		return;
 	}
 
 	free(p);
 }
 
-// __LINE__, __FILE__
-
 #if ENABLE_MEMLEAK
-
-#define malloc(size) _malloc(size, __FILE__, __LINE__)
-
-#define free(ptr)   _free(ptr, __FILE__, __LINE__)
-
+#define malloc(size)    _malloc(size, __FILE__, __LINE__)
+#define free(ptr)       _free(ptr, __FILE__, __LINE__)
 #endif
-
 
 
 #else
 
-// hook
-// .c --> .cpp
 typedef void *(*malloc_t)(size_t size);
 malloc_t malloc_f = NULL;
 
@@ -83,12 +73,12 @@ int enable_malloc_hook = 1;
 // __builtin_return_address();
 // a() --> b() --> c() --> __builtin_return_address()
 
-void *malloc(size_t size) {
-
+void *malloc(size_t size)
+{
 	void *p = NULL;
 	if (enable_malloc_hook) {
 		enable_malloc_hook = 0;
-		
+
 		void *caller = __builtin_return_address(0);
 
 		printf("caller: %p\n", caller);
@@ -103,16 +93,14 @@ void *malloc(size_t size) {
 
 }
 
-
-void free(void *p) {
+void free(void *p)
+{
 	printf("free");
-	
 	return free_f(p);
 }
 
-
-static void init_hook(void) {
-
+static void init_hook(void)
+{
 	if (malloc_f == NULL) {
 		malloc_f = dlsym(RTLD_NEXT, "malloc");
 	}
@@ -127,8 +115,8 @@ static void init_hook(void) {
 
 // dladdr
 
-int main() {
-
+int main()
+{
 	init_hook();
 
 	void *p1 = malloc(5);   //_malloc(size, __FILE__, __LINE__)
@@ -136,9 +124,9 @@ int main() {
 
 	free(p1);
 
-	//printf("p1: %p, p2: %p\n", p1, p2);
+	printf("p1: %p, p2: %p\n", p1, p2);
 	//printf("global : %d\n", global);
- // -->
+
 	//getchar();
 
 	return 0;
